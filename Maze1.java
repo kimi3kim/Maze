@@ -108,8 +108,6 @@ public class Maze1 {
             System.out.println(errMes);
           }
 
-
-
           /* **を動かすためのプログラム  */
           if (move == 'w') {
             if (wallgo[x-1][y] == 0) {
