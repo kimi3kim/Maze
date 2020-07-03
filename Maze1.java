@@ -11,6 +11,7 @@ public class Maze1 {
     int x;
     int y = 1;
 
+
     /*迷路を配列で表現している。 0：道、1：壁 */
     int[][] wall ;
     wall = new int[][]{
