@@ -66,15 +66,10 @@ public class PlayGameMaze {
 
       game.setVisible(true);
 
-
 		} catch (IOException e) {
 
 			e.printStackTrace();
 		}
 
-
-
-
 	}
-
 }
