@@ -4,7 +4,7 @@
 public class OperationMethod extends MakeMaze  {
 	String errMes = "You can not move there.";
 	boolean t ;
-	
+
 	OperationMethod(int b,int c){
 		super(b,c);
 	}

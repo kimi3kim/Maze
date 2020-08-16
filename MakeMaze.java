@@ -149,7 +149,7 @@ public class MakeMaze {
 	 public void findnewWay() {
 		 //配列wall[][]を一つ一つ確認していく。外枠以外のかべに当たった時に
 		 while(true) {
-			 if(checkWaysec()==false) {
+//			 if(checkWaysec()==false) {
 				 for(int i = 1; i < mazeSize - 1; i++ ) {
 					 for(int j = 1; j < mazeSize - 1; j++ ) {
 						 if(i%2!=0&& j%2!=0) {
@@ -167,7 +167,7 @@ public class MakeMaze {
 				 break;
 			 }
 		 }
-	 }
+//	 }
 
 //findnewWay()で道が作成せきると判断できた場合、ランダムで道を選択して新たに道を作る。
 	 public void makeRodesc() {
@@ -213,7 +213,7 @@ public class MakeMaze {
 
 	 public boolean checkWaysec(){
 		 try {
-			 if(x+2 <= mazeSize-1 &&wall[x+2][y]==1) {
+			 if(x+2 <= mazeSize-1 && wall[x+2][y]==1) {
 					 t = true;
 			 } else if(x-2 >= 0 && wall[x-2][y]==1) {
 					 t = true;
