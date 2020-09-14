@@ -292,7 +292,6 @@ class KeyOperation extends JFrame implements KeyListener {
 
 
       }
-        moveCounter++;
     }
 
   @Override
@@ -313,7 +312,7 @@ class KeyOperation extends JFrame implements KeyListener {
         case KeyEvent.VK_RIGHT:
         System.out.println("右が離されました");
         break;
-        
+
         //左キー
         case KeyEvent.VK_LEFT:
         System.out.println("左が離されました");
@@ -343,7 +342,8 @@ class KeyOperation extends JFrame implements KeyListener {
 
 
     public void encountEnemy(){
-      if (moveCounter == 5){
+      moveCounter++;
+      if (moveCounter == 3){
         Music.clip.stop();
 
         view = "battle";
