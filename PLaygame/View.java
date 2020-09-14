@@ -1,30 +1,16 @@
-import java.awt.Dimension;
+
 import java.awt.Font;
-import java.awt.image.BufferedImage;
+
 import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Dimension;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
+
+
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.IOException;
-import java.awt.CardLayout;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-
-import java.io.File;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -35,7 +21,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 
-public class View extends JFrame {
+public class View  {
   JPanel gameClear;
   JPanel gameOver;
   static Clip clip3;

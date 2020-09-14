@@ -1,7 +1,7 @@
 import java.io.File;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
+
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -18,7 +18,7 @@ public class Music{
   Music(){
 
     clip = null;
-    int count = 5;      // (count+1)回 再生する
+  
     AudioInputStream audioInputStream;
 
     try{
@@ -38,14 +38,7 @@ public class Music{
       e.printStackTrace();
     }
 
-    // 10秒経過したら終了する
-    try{
-      clip.loop(Clip.LOOP_CONTINUOUSLY);
-      Thread.sleep(10000);
-    }catch (InterruptedException e){
-    }
-    // clip.stop();
-    // System.exit(0);
+    
   }
   Music(int a){
       clip = null;
@@ -73,14 +66,7 @@ public class Music{
         e.printStackTrace();
       }
 
-      // 10秒経過したら終了する
-      // try{
-      //   clip.loop(Clip.LOOP_CONTINUOUSLY);
-      //   Thread.sleep(10000);
-      // }catch (InterruptedException e){
-      // }
-      // clip.stop();
-      // System.exit(0);
+     
 
   }
 

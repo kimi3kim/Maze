@@ -2,11 +2,12 @@ import javax.swing.JLabel;
 import java.util.Random;
 
 
-public class Char{
-  static String  name;
-  static String  enemyName;
+ class Char{
+  private static String  name;
+  private static String  enemyName;
   private static int HP;
   private static int enemyHP;
+  private static int enemymaxHP;
 
   // final static int  maxHP;
   static JLabel[] brave;
@@ -19,30 +20,31 @@ public class Char{
 
 
 // 勇者
-  Char(String name){
-    this.name = name;
+  Char(String a){
+    name = a;
     HP = 200;
     // maxHP = HP;
-
-    // brave = new JLabel[1];
-    // bravemove = new JLabel(this.name + "は、ダメージを受けた。");
-    // brave[1] = bravemove;
-    braveatack = 40;
+    braveatack = 100;
 
   }
 
-//ニンニクスライム
-  Char(String name, int a/*int b*/){
+//モンスター
+  Char(String name, int a,int c){
     enemyName = name;
     enemyHP = a;
-    // maxHP = b;
-    atack = 25;
-
-    enemy = new JLabel[1];
-    JLabel enemymove = new JLabel(this.name + "の攻撃");
-
-    // enemy[1] = enemymove;
+    enemymaxHP = a;
+    atack = c;
   }
+  
+  public static String getName(){
+    return name;
+  }
+
+  public static String getEnemyName(){
+    return enemyName;
+  }
+
+  
 
   public static int getHP(){
     return HP;
@@ -52,7 +54,13 @@ public class Char{
     return enemyHP;
   }
 
+  public static int getenemymaxHP(){
+    return enemymaxHP;
+  }
 
+  public static void setenemyHP(int n){
+    enemyHP = n;
+  }
 
   public static int getDamage(){
      Random rnd2 = new Random();
@@ -60,6 +68,10 @@ public class Char{
 
      //Playerへのダメージ
      HP = HP - damage;
+     if(HP < 0){
+       HP = 0;
+
+     }
 
      return damage;
   }
