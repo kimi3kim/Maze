@@ -47,9 +47,6 @@ public class View  {
     gameOver.setLayout(new BorderLayout());
     gameOver.add(over,BorderLayout.CENTER);
     gameOver.setBackground(Color.BLACK);
-
-
-
   }
 
   public static void endMusic(int end){

@@ -1,6 +1,8 @@
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
+import javax.swing.border.LineBorder;
+import java.awt.Font;
 
 
 import javax.swing.ImageIcon;
@@ -9,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.io.File;
 import java.io.IOException;
+
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -36,13 +40,30 @@ class KeyOperation extends JFrame implements KeyListener {
   ImageIcon imageRIGHT;
   ImageIcon imageLEFT;
   JLabel[][] dungeon;
+  JPanel space;
+  JPanel spaceHP;
+  JLabel statas;
 
+  static int spaceCounter;
   static String view ;
   static Clip clip2;
   AudioInputStream audioInputStream2;
   static int count;
   static int count2;
   static int moveCounter;
+  static String action; 
+
+  static String bmAttack;
+  static String bmMagic;
+  static String bmrunaway;
+  static JLabel[] battleMeniu;
+  static JLabel[] magicMeniu;
+  static int meniuLength ;
+  static int magicLength;
+
+  static String[] battleComand;
+  static String comand;
+  
 
 
   public KeyOperation( final int mazeSize,final int[][] wall, final JLabel[][] dungeon,JPanel jp,JPanel jp1,final ImageIcon imageWalljlabel,final ImageIcon imageWayjlabel,final ImageIcon imageUPlabel,
@@ -68,10 +89,6 @@ class KeyOperation extends JFrame implements KeyListener {
     jp1 = new JPanel() ;
     this.jp1 = jp1;
 
-
-
-
-
     imageWall = new ImageIcon();
     imageWall = imageWalljlabel;
 
@@ -92,7 +109,55 @@ class KeyOperation extends JFrame implements KeyListener {
 
     //Battleviewのインスタンス化
     final Battleview btv = new Battleview();
+    battleMeniu = new JLabel[]{btv.attackArrow,btv.magicArrow,btv.runawayArrow};
+    magicMeniu = new JLabel[]{btv.brathArrow,btv.drinkArrow};
+
+    battleComand = new String[]{"option","attack","magic","runaway"};
+    meniuLength = 0; 
+    magicLength = 0;
     count2 = 0;
+
+
+    space = new JPanel();
+    LineBorder border = new LineBorder(Color.RED, 2, true);
+    space.setBounds(0, 300,300,100);
+    space.setBackground(Color.BLACK);
+    space.setBorder(border);
+
+    // space　Panelに貼り付けるラベル
+    JLabel heal = new JLabel("回復 MP20");
+    heal.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 24));
+    heal.setForeground(Color.WHITE);
+
+    JLabel aro = new JLabel(" ▷ ") ;
+    aro.setForeground(Color.WHITE);
+
+    space.add(aro);
+    space.add(heal);
+
+    // スペースを押した時にHPとMPを表示するLabelを貼り付けるためのPanel
+    spaceHP = new JPanel();
+    LineBorder borderHP = new LineBorder(Color.WHITE, 2, true);
+    spaceHP.setBounds(0, 0,800,50);
+    spaceHP.setBackground(Color.BLACK);
+    spaceHP.setBorder(borderHP);
+
+    // HP とMPを表示する Label
+    statas = new JLabel(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP()); 
+    statas.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 24));
+    statas.setForeground(Color.WHITE);
+    spaceHP.add(statas);
+
+    add(spaceHP);
+    add(space);
+
+    spaceHP.setVisible(false);
+    space.setVisible(false);
+
+    spaceCounter = 0;
+
+   
+
 
 
     //キー入力の有効化
@@ -106,7 +171,6 @@ class KeyOperation extends JFrame implements KeyListener {
     //ContentPaneにはめ込まれたパネルを削除
     getContentPane().removeAll();
 
-    // panel.add(label);
     add(panel);//パネルの追加
 
     validate();//更新
@@ -164,6 +228,25 @@ class KeyOperation extends JFrame implements KeyListener {
 
           }
         }
+
+        // if Battleview use
+        if(view.equals("battle")&& comand.equals(battleComand[0])){
+          if(meniuLength -1 >= 0){
+            battleMeniu[meniuLength].setText(" ");
+            meniuLength = meniuLength - 1; 
+            battleMeniu[meniuLength].setText("▷");
+          }
+        }
+
+        if(view.equals("battle")&& comand.equals(battleComand[2])){
+          if(magicLength -1 >= 0){
+            magicMeniu[magicLength].setText(" ");
+            magicLength = magicLength - 1; 
+            magicMeniu[magicLength].setText("▷");
+          }
+        }
+
+
         break;
 
         //下キー
@@ -182,8 +265,28 @@ class KeyOperation extends JFrame implements KeyListener {
             dungeon[a][b].setIcon(imageDOWN);
             encountEnemy();
           }
-
         }
+
+        if(view.equals("battle") && comand.equals(battleComand[0])){
+          if(meniuLength+1 < battleMeniu.length){
+            battleMeniu[meniuLength].setText(" ");
+            meniuLength = meniuLength + 1; 
+            battleMeniu[meniuLength].setText("▷");
+
+          }
+        }
+
+        if(view.equals("battle")&& comand.equals(battleComand[2])){
+          if(magicLength +1 < magicMeniu.length){
+            magicMeniu[magicLength].setText(" ");
+            magicLength = magicLength + 1; 
+            magicMeniu[magicLength].setText("▷");
+          }
+        }
+
+
+
+
         break;
 
         //右キー
@@ -233,27 +336,44 @@ class KeyOperation extends JFrame implements KeyListener {
         case KeyEvent.VK_ENTER:
         System.out.println("ENTERが押されました。");
 
+        // マップで回復
+        if(view.equals("statas")){
+          if(Char.getHP() < 200){
+            Char.getHeal();
+            statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+            Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/200"+"  MP "+Char.getMP());
+
+          }
+          
+        }
+        
+        
+        
         // バトル画面の時
-        if(view.equals("battle")){
+        
+        
+        // 攻撃を選択
+        if(view.equals("battle") && battleMeniu[0].getText().equals("▷")){
+          comand = battleComand[1];
           if(Char.getHP() > 0) {
             if(Char.getenemyHP() > 0) {
               if(counter == 0) {
-                //
-                Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                Battleview.report.setText(Char.getName() + "の攻撃!"+ "  " +Char.getBraveDamage() +"ダメージあたえた。");
+                battleMusic(counter);
+                
+                
                 counter++;
 
               } else if(counter == 1){
+                Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                counter++;
 
+              } else if(counter == 2){
                 Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
                 battleMusic(counter);
-                // Time();
-                Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200");
-                counter++;
-              } else if(counter == 2){
-
-
-                Battleview.report.setText(Char.getName() + "の攻撃!"+ "  " +Char.getBraveDamage() +"ダメージあたえた。");
-                battleMusic(counter);
+                
+                Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                 
                 counter = 0;
 
               }else{
@@ -262,6 +382,7 @@ class KeyOperation extends JFrame implements KeyListener {
 
             } else {
               if(view.equals("battle")){
+                counter= 0;
                 endBattle();
                 Char.setenemyHP(Char.getenemymaxHP());
 
@@ -283,14 +404,51 @@ class KeyOperation extends JFrame implements KeyListener {
             changeView(over.gameOver);
             View.endMusic(2);
           }
-
+        } else{
+          // 呪文を選択
+          if(view.equals("battle") && battleMeniu[1].getText().equals("▷")){
+            comand = battleComand[2];
+            Battleview.chooseMagic.setVisible(true);
+          }
         }
-
         break;
 
         // スペースキーが押されたらパネルを追加
+        case KeyEvent.VK_SPACE:
+        System.out.println("スペースが押されました");
+
+        if(view.equals("battle") && battleMeniu[1].getText().equals("▷")){
+          Battleview.chooseMagic.setVisible(false);
+          comand = battleComand[0];
+        }else{
+          
+          if(spaceCounter==0){
+            
+            view = "statas";
+            space.setVisible(true);
+            spaceHP.setVisible(true);
+  
+            spaceCounter++;
+          
+            
+          } else if(spaceCounter==1){
+            spaceHP.setVisible(false);
+            space.setVisible(false);
+            spaceCounter=0;
+            view = "maze";
+  
+          
+            
+          } else {
+            
+          }
+        }
+
+          
+         
 
 
+        break;
       }
     }
 
@@ -317,8 +475,19 @@ class KeyOperation extends JFrame implements KeyListener {
         case KeyEvent.VK_LEFT:
         System.out.println("左が離されました");
         break;
+
+        // スペースキーが離された
+        case KeyEvent.VK_SPACE:
+        System.out.println("スペースが離されました");
+       
+
+        break;
+
       }
     }
+    
+
+
 
     // 迷路の描写
     public void   printMaze(){
@@ -343,10 +512,12 @@ class KeyOperation extends JFrame implements KeyListener {
 
     public void encountEnemy(){
       moveCounter++;
-      if (moveCounter == 3){
+      // ランダムで遭遇するようにする
+      if (moveCounter == 4){
         Music.clip.stop();
 
         view = "battle";
+        comand = battleComand[0];
 
         changeView(Battleview.battle);
 
@@ -363,26 +534,26 @@ class KeyOperation extends JFrame implements KeyListener {
         for (int i = 0; i < wall.length ;i++ ) {
           for(int j = 0; j< wall.length;j++) {
             if (wall[i][j]== 0) {
-              System.out.print("  ");
+
               final JLabel way = new JLabel(imageWay);
               jp1.add(way);
 
               dungeon[i][j]= way;
 
             } else if (wall[i][j]== 1) {
-              System.out.print("[]");
+
               final JLabel imagewall = new JLabel(imageWall);
               jp1.add(imagewall);
               dungeon[i][j] = imagewall;
 
             } else if (wall[i][j]== 2 ) {
-              System.out.print("**");
+
               final JLabel uP = new JLabel(imageUP);
               jp1.add(uP);
               dungeon[i][j] = uP;
 
             } else {
-              System.out.print("  ");
+
               final JLabel way = new JLabel(imageWay);
               jp1.add(way);
 
@@ -401,13 +572,14 @@ class KeyOperation extends JFrame implements KeyListener {
 
       // 迷路画面に戻す
       viewMaze();
-      changefromBattleview(jp,jp1);
+      changefromBattleview(jp,jp1,space,spaceHP);
       moveCounter = 0;
 
       final Music main = new Music();
     }
 
-    public void changefromBattleview(final JPanel panel,final JPanel panel1) {
+
+    public void changefromBattleview(final JPanel panel,final JPanel panel1, JPanel space, JPanel spaceHP) {
 
       if(count2==0){
         //ContentPaneにはめ込まれたパネルを削除
@@ -416,14 +588,24 @@ class KeyOperation extends JFrame implements KeyListener {
       panel1.setBounds(100, 10, 39  * mazeSize, 45 * mazeSize);
       panel1.setBackground(Color.BLACK);
       panel.setBackground(Color.BLACK);
+
+      
+
+
       count2++;
     }else{
       getContentPane().removeAll();
     }
+      
+      add(spaceHP);
+      add(space);
 
-
+      statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+ Char.getMP());
+      Battleview.report.setText(Char.getEnemyName() +"が飛び出してきた！");
       add(panel1);//パネルの追加
       add(panel);
+
+
       validate();//更新
       repaint();//再描画
     }

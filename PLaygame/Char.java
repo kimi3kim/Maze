@@ -6,6 +6,7 @@ import java.util.Random;
   private static String  name;
   private static String  enemyName;
   private static int HP;
+  private static int mP;
   private static int enemyHP;
   private static int enemymaxHP;
 
@@ -23,6 +24,7 @@ import java.util.Random;
   Char(String a){
     name = a;
     HP = 200;
+    mP = 100;
     // maxHP = HP;
     braveatack = 100;
 
@@ -48,6 +50,10 @@ import java.util.Random;
 
   public static int getHP(){
     return HP;
+  }
+
+  public static int getMP(){
+    return mP;
   }
 
   public static int getenemyHP(){
@@ -84,5 +90,21 @@ import java.util.Random;
 
      return bravedamage;
   }
+  public static void getHeal(){
+    if (mP - 20 >= 0){
+      Random rnd2 = new Random();
+      int healpoint = 20 + rnd2.nextInt(15);
+       
+      //Playerの回復
+      HP = HP + healpoint;
+      if(HP>200){
+        HP = 200;
+      }
+      mP = mP - 20;
+      
+    }else{
+      
+    }
+ }
 
 }
