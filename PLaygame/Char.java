@@ -24,9 +24,9 @@ import java.util.Random;
   Char(String a){
     name = a;
     HP = 200;
-    mP = 100;
+    mP = 200;
     // maxHP = HP;
-    braveatack = 100;
+    braveatack = 50;
 
   }
 
@@ -85,11 +85,28 @@ import java.util.Random;
      Random rnd1 = new Random();
      bravedamage = braveatack + rnd1.nextInt(10);
 
-     //Playerへのダメージ
+     //Enemyへのダメージ
      enemyHP = enemyHP - bravedamage;
 
      return bravedamage;
   }
+
+  public static int getBraveMagicDamage(String a){
+    Random rnd2 = new Random();
+    if(a.equals("BREATHCARE")){
+      if (mP - 30 >= 0){
+      bravedamage = 70 + rnd2.nextInt(30);
+      
+      //Enemyへのダメージ
+      enemyHP = enemyHP - bravedamage;
+      mP = mP - 30;
+      }
+    }
+    return bravedamage;
+ }
+
+
+
   public static void getHeal(){
     if (mP - 20 >= 0){
       Random rnd2 = new Random();
