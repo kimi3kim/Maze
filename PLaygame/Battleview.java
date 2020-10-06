@@ -90,6 +90,11 @@ import javax.swing.border.LineBorder;
 
       forreport.add(report);
 
+      // Char boss1 = new Char("キングニンニクスライム",300,45);
+
+
+
+
     // Battle menu Panel
     battlemenu = new JPanel(); 
     battlemenu.setLayout(null);

@@ -67,6 +67,7 @@ class KeyOperation extends JFrame implements KeyListener {
   static String[] battleComand;
   static String comand;
   static Random dais;
+  static int counterforrun;
 
 
   public KeyOperation( final int mazeSize,final int[][] wall, final JLabel[][] dungeon,JPanel jp,JPanel jp1,final ImageIcon imageWalljlabel,final ImageIcon imageWayjlabel,final ImageIcon imageUPlabel,
@@ -159,6 +160,7 @@ class KeyOperation extends JFrame implements KeyListener {
 
     spaceCounter = 0;
     magicCounter = 0;
+    counterforrun = 0;
 
    
 
@@ -491,10 +493,10 @@ class KeyOperation extends JFrame implements KeyListener {
 
                       }else if (magicCounter == 5) {
                         Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                        battleMusic(counter);
                         magicCounter ++;  
                       } else if(magicCounter==6) {
                         Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
-                        battleMusic(counter);
                       
                         Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
                         magicCounter ++;  
@@ -507,10 +509,6 @@ class KeyOperation extends JFrame implements KeyListener {
                 }
               }
             }else{
-              magicCounter=0;
-              counter= 0;
-              Char.setenemyHP(Char.getenemymaxHP());
-              Char.setBraveatack(Char.getDefaultbraveatack());
 
               endBattle();
             }
@@ -524,7 +522,48 @@ class KeyOperation extends JFrame implements KeyListener {
             view = "gameover";
           }     
                   
-        } 
+        } else if (view.equals("battle") && battleMeniu[2].getText().equals("▷")){
+          comand = battleComand[3];
+          // 偶数の時は,逃走
+          if(Char.getHP() < 0) {
+             // GAME OVER 画面に切り替え
+             Music.clip.stop();
+             final View over = new View();
+             changeView(over.gameOver);
+             View.endMusic(2);
+             view = "gameover";
+          }else{
+            if(counterforrun == 0){
+              dais = new Random();
+              if(dais.nextInt(4)%2==0){
+                Battleview.report.setText(Char.getName() + "は, うまく逃れた！");
+                counterforrun++;
+                counter = 4;
+                
+              }else{
+                Battleview.report.setText(Char.getEnemyName() + "に追いつかれた！");
+                counterforrun++;
+              }
+            }else if(counterforrun == 1 && counter==4){
+              endBattle();
+            }else if(counterforrun == 1){
+                Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                battleMusic(counter);
+                counterforrun++;
+            }else if(counterforrun==2){
+                Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");        
+                Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                counterforrun++;
+  
+            }else {
+                Battleview.report.setText("次の行動を選択してください.");
+                comand = battleComand[0];
+                counterforrun=0;
+              
+            }   
+           
+          }
+        }
         
         break;
 
@@ -684,7 +723,12 @@ class KeyOperation extends JFrame implements KeyListener {
     public void endBattle(){
       view = "maze";
       Music.clip.stop();
+      magicCounter=0;
+      counter= 0;
+      counterforrun=0;
+      Char.setenemyHP(Char.getenemymaxHP());
       Char.setBraveatack(Char.getDefaultbraveatack());
+      
       // 迷路画面に戻す
       viewMaze();
       changefromBattleview(jp,jp1,space,spaceHP);
