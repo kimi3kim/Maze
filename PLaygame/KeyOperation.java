@@ -4,14 +4,12 @@ import java.awt.Color;
 import javax.swing.border.LineBorder;
 import java.awt.Font;
 
-
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.io.File;
 import java.io.IOException;
-
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -162,10 +160,6 @@ class KeyOperation extends JFrame implements KeyListener {
     magicCounter = 0;
     counterforrun = 0;
 
-   
-
-
-
     //キー入力の有効化
     addKeyListener(this);
   }
@@ -185,12 +179,12 @@ class KeyOperation extends JFrame implements KeyListener {
 
 
   @Override
-  	public void keyTyped(final KeyEvent e) {
+  	public void keyTyped(KeyEvent e) {
   		//使用しないので空にしておきます。
   	}
 
   @Override
-    public void keyPressed(final KeyEvent e)  {
+    public void keyPressed( KeyEvent e)  {
 
       switch ( e.getKeyCode() ) {
 
@@ -293,9 +287,6 @@ class KeyOperation extends JFrame implements KeyListener {
           }
         }
 
-
-
-
         break;
 
         //右キー
@@ -315,10 +306,9 @@ class KeyOperation extends JFrame implements KeyListener {
             dungeon[a][b].setIcon(imageRIGHT);
 
             encountEnemy();
-
-
           }
         }
+
         break;
 
         //左キー
@@ -346,90 +336,50 @@ class KeyOperation extends JFrame implements KeyListener {
         System.out.println("ENTERが押されました。");
 
         // マップで回復
-        if(view.equals("statas")){
+        if(view.equals("statas")) {
           if(Char.getHP() < 200){
             Char.getHeal();
             statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
             Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/200"+"  MP "+Char.getMP());
-
-          }
-          
-        }
-      
-        // バトル画面の時
-
-        // 攻撃を選択
-        if(view.equals("battle") && battleMeniu[0].getText().equals("▷")){
-          comand = battleComand[1];
-          if(Char.getHP() > 0) {
-            if(Char.getenemyHP() > 0) {
-              if(counter == 0) {
-                Battleview.report.setText(Char.getName() + "の攻撃!"+ "  " +Char.getBraveDamage() +"ダメージあたえた。");
-                battleMusic(counter);
-                counter++;
-
-              } else if(counter == 1){
-                Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
-                counter++;
-
-              } else if(counter == 2){
-                Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
-                battleMusic(counter);
-                
-                Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-                counter++;
-                
-              }else{
-                Battleview.report.setText("次の行動を選択してください.");
-                counter = 0;
-                comand = battleComand[0];
-              }
-
-            } else {
-              if(view.equals("battle")){
-                counter= 0;
-                endBattle();
-                Char.setenemyHP(Char.getenemymaxHP());
-
-
-              }else{
-                // GAME クリア画面
-                Music.clip.stop();
-                final View clear = new View();
-                changeView(clear.gameClear);
-                View.endMusic(1);
-
-              }
-            }
-
-          }else{
-            // GAME OVER 画面に切り替え
-            Music.clip.stop();
-            final View over = new View();
-            changeView(over.gameOver);
-            View.endMusic(2);
           }
 
-          // 呪文を選択
-        } else if(view.equals("battle") && battleMeniu[1].getText().equals("▷")){
-          if(Char.getHP() > 0) {
+          // バトル画面の時
+        } else if(view.equals("battle")) {
+          if(Char.getHP() > 0){
             if(Char.getenemyHP() > 0) {
-              
-      
-              if(magicCounter == 0){
+              // 攻撃を選択
+              if(battleMeniu[0].getText().equals("▷")){
+                comand = battleComand[1];
+                if(counter == 0) {
+                  Battleview.report.setText(Char.getName() + "の攻撃!"+ "  " +Char.getBraveDamage() +"ダメージあたえた。");
+                  battleMusic(counter);
+                  counter++;
+                } else if(counter == 1){
+                  Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                  counter++;
+                } else if(counter == 2){
+                  Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
+                  battleMusic(counter);
+                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                  counter++;
+                }else if (counter == 3 ){
+                  Battleview.report.setText("次の行動を選択してください.");
+                  counter = 0;
+                  comand = battleComand[0];
+                }             
+              // 呪文を選択
+              } else if(battleMeniu[1].getText().equals("▷")){
                 comand = battleComand[2];
-                Battleview.chooseMagic.setVisible(true);
-                magicCounter ++;  
-
-              } else
+                if(magicCounter == 0){
+                  Battleview.chooseMagic.setVisible(true);
+                  magicCounter ++;  
+                
                 // Breath Careを選択
-                if(view.equals("battle") && magicMeniu[0].getText().equals("▷") && magicCounter > 0 ){
+                }else if (magicMeniu[0].getText().equals("▷") && magicCounter > 0){
                   if(Char.getMP() - 30 < 0){
                     Battleview.chooseMagic.setVisible(false);     
                     Battleview.report.setText("MPがたりません！");
                     comand = battleComand[0];
-                   
-      
                   }else{
                     if(magicCounter == 1){
                       Battleview.chooseMagic.setVisible(false);
@@ -437,8 +387,8 @@ class KeyOperation extends JFrame implements KeyListener {
                       comand = battleComand[4];
                       magicCounter ++;  
                     }else if(magicCounter == 2){
-                      Battleview.report.setText("ミントの香りが心地よい！");
-                      magicCounter ++;  
+                        Battleview.report.setText("ミントの香りが心地よい！");
+                        magicCounter ++;  
                     }else if(magicCounter == 3){
                       Battleview.report.setText(Char.getEnemyName()+" に, "+Char.getBraveMagicDamage("BREATHCARE") +"ダメージあたえた。");
                       Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
@@ -457,59 +407,89 @@ class KeyOperation extends JFrame implements KeyListener {
                       comand = battleComand[0];
                       magicCounter = 0;
                     }
-                  } 
-                //  DRINK MILK 選択(回復と攻撃力上昇まれにお腹を壊す[固定ダメージを受ける])
-                } else{
-                  if(view.equals("battle") && magicMeniu[1].getText().equals("▷") && magicCounter > 0 ) {
-                    if(Char.getMP() - 40 < 0){
-                      Battleview.chooseMagic.setVisible(false);     
-                      Battleview.report.setText("MPがたりません！");
-                      comand = battleComand[0];
-                    }else{
-                      if(magicCounter == 1){
-                        Battleview.chooseMagic.setVisible(false);
-                        Battleview.report.setText(Char.getName() + "は, DRINK MILK を唱えた！");
-                        comand = battleComand[4];
-                        magicCounter ++;  
-                      }else if(magicCounter==2){
-                        Battleview.report.setText("目の前に 一杯の牛乳が召喚された！");
-                        magicCounter ++; 
-                      }else if(magicCounter == 3){
-                        Battleview.report.setText(Char.getName() + "は, 躊躇なく飲んだ！");
-                        magicCounter ++; 
-                      }else if (magicCounter == 4) {
-                        // 偶数の時は当たり
-                        dais = new Random();
-                        if(dais.nextInt(4)%2 == 0){
-                          Battleview.report.setText("全身に力が漲ってきた！");
-                          Char.getBraveMagicDamage("DRINKMILKUP");
-                          Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-                          magicCounter ++; 
-                        }else{
-                          Battleview.report.setText("飲みすぎて腹をくだした！"+ Char.getBraveMagicDamage("DRINKMILKDOWN") +"ダメージを受けた。");
-                          Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-                          magicCounter ++; 
-                        }
-
-                      }else if (magicCounter == 5) {
-                        Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
-                        battleMusic(counter);
-                        magicCounter ++;  
-                      } else if(magicCounter==6) {
-                        Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
-                      
-                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-                        magicCounter ++;  
-                      } else {
-                        Battleview.report.setText("次の行動を選択してください.");
-                        comand = battleComand[0];
-                        magicCounter = 0;
-                      }
                   }
-                }
-              }
-            }else{
+                 //  DRINK MILK 選択(回復と攻撃力上昇まれにお腹を壊す[固定ダメージを受ける])
+                }else if(magicMeniu[1].getText().equals("▷") && magicCounter > 0){
+                  if(Char.getMP() - 40 < 0){
+                    Battleview.chooseMagic.setVisible(false);     
+                    Battleview.report.setText("MPがたりません！");
+                    comand = battleComand[0];
+                  }else{
+                    if(magicCounter == 1){
+                      Battleview.chooseMagic.setVisible(false);
+                      Battleview.report.setText(Char.getName() + "は, DRINK MILK を唱えた！");
+                      comand = battleComand[4];
+                      magicCounter ++;  
+                    }else if(magicCounter==2){
+                      Battleview.report.setText("目の前に 一杯の牛乳が召喚された！");
+                      magicCounter ++; 
+                    }else if(magicCounter == 3){
+                      Battleview.report.setText(Char.getName() + "は, 躊躇なく飲んだ！");
+                      magicCounter ++; 
+                    }else if (magicCounter == 4) {
+                      // 偶数の時は当たり
+                      dais = new Random();
+                      if(dais.nextInt(4)%2 == 0){
+                        Battleview.report.setText("全身に力が漲ってきた！");
+                        Char.getBraveMagicDamage("DRINKMILKUP");
+                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                        magicCounter ++; 
+                      }else{
+                        Battleview.report.setText("飲みすぎて腹をくだした！"+ Char.getBraveMagicDamage("DRINKMILKDOWN") +"ダメージを受けた。");
+                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                        magicCounter ++; 
+                      }
+                      
+                    }else if (magicCounter == 5) {
+                      Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                      battleMusic(counter);
+                      magicCounter ++;  
+                    } else if(magicCounter==6) {
+                      Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
+                      
+                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                      magicCounter ++;  
+                    } else {
+                      Battleview.report.setText("次の行動を選択してください.");
+                      comand = battleComand[0];
+                      magicCounter = 0;
+                    }
+                  }
+                }//魔法を追記するならここから
 
+              // 逃走を選択
+              }else if(battleMeniu[2].getText().equals("▷")){
+                comand = battleComand[3];
+                // 偶数の時は,逃走
+                if(counterforrun == 0){
+
+                 dais = new Random();
+                 if(dais.nextInt(4)%2==0){
+                   Battleview.report.setText(Char.getName() + "は, うまく逃れた！");
+                   counterforrun++;
+                   counter = 4;
+                  }else{
+                    Battleview.report.setText(Char.getEnemyName() + "に追いつかれた！");
+                    counterforrun++;
+                  }  
+                }else if(counterforrun == 1 && counter==4){
+                  endBattle();
+                }else if(counterforrun == 1){
+                    Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
+                    battleMusic(counter);
+                    counterforrun++;
+                }else if(counterforrun==2){
+                  Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");        
+                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                  counterforrun++;
+                }else {
+                    Battleview.report.setText("次の行動を選択してください.");
+                    comand = battleComand[0];
+                    counterforrun=0; 
+                }   
+              }
+
+            }else{
               endBattle();
             }
 
@@ -519,65 +499,21 @@ class KeyOperation extends JFrame implements KeyListener {
             final View over = new View();
             changeView(over.gameOver);
             View.endMusic(2);
-            view = "gameover";
-          }     
-                  
-        } else if (view.equals("battle") && battleMeniu[2].getText().equals("▷")){
-          comand = battleComand[3];
-          // 偶数の時は,逃走
-          if(Char.getHP() < 0) {
-             // GAME OVER 画面に切り替え
-             Music.clip.stop();
-             final View over = new View();
-             changeView(over.gameOver);
-             View.endMusic(2);
-             view = "gameover";
-          }else{
-            if(counterforrun == 0){
-              dais = new Random();
-              if(dais.nextInt(4)%2==0){
-                Battleview.report.setText(Char.getName() + "は, うまく逃れた！");
-                counterforrun++;
-                counter = 4;
-                
-              }else{
-                Battleview.report.setText(Char.getEnemyName() + "に追いつかれた！");
-                counterforrun++;
-              }
-            }else if(counterforrun == 1 && counter==4){
-              endBattle();
-            }else if(counterforrun == 1){
-                Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
-                battleMusic(counter);
-                counterforrun++;
-            }else if(counterforrun==2){
-                Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");        
-                Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-                counterforrun++;
-  
-            }else {
-                Battleview.report.setText("次の行動を選択してください.");
-                comand = battleComand[0];
-                counterforrun=0;
-              
-            }   
-           
           }
         }
-        
         break;
-
+        
         // スペースキーが押されたらパネルを追加
         case KeyEvent.VK_SPACE:
         System.out.println("スペースが押されました");
 
         if(view.equals("battle") && battleMeniu[1].getText().equals("▷")){
           Battleview.chooseMagic.setVisible(false);
+          magicCounter = 0;
           comand = battleComand[0];
+
         }else{
-          
           if(spaceCounter==0){
-            
             view = "statas";
             space.setVisible(true);
             spaceHP.setVisible(true);
@@ -589,25 +525,18 @@ class KeyOperation extends JFrame implements KeyListener {
             spaceHP.setVisible(false);
             space.setVisible(false);
             spaceCounter=0;
-            view = "maze";
-  
-          
-            
+            view = "maze";   
           } else {
             
           }
         }
-
-          
-         
-
 
         break;
       }
     }
 
   @Override
-    public void keyReleased(final KeyEvent e) {
+    public void keyReleased( KeyEvent e) {
 
       switch ( e.getKeyCode() ) {
         //上キー
@@ -644,7 +573,7 @@ class KeyOperation extends JFrame implements KeyListener {
 
 
     // 迷路の描写
-    public void   printMaze(){
+    public void printMaze(){
       for (int i = 0; i < wall.length ;i++ ) {
         for(int j = 0; j< wall.length;j++) {
           if (wall[i][j]==0) {

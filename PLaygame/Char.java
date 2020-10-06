@@ -1,6 +1,4 @@
-import javax.swing.JLabel;
 import java.util.Random;
-
 
  class Char{
   private static String  name;
@@ -11,18 +9,16 @@ import java.util.Random;
   private static int enemymaxHP;
 
   // final static int  maxHP;
-  static JLabel[] brave;
+  
   private static int braveatack;
  
   static int atack;
-  static JLabel[] enemy;
-  JLabel bravemove ;
+ 
+  
   private static int damage;
   private static int bravedamage;
   static Random rnd1;
   private static int defaultbraveatack ;
-
-
 
 // 勇者
   Char(String a){
@@ -106,7 +102,7 @@ import java.util.Random;
     rnd1 = new Random();
     if(a.equals("BREATHCARE")){
       if (mP - 30 >= 0){
-      bravedamage = 70 + rnd1.nextInt(30);
+      bravedamage = 80 + rnd1.nextInt(30)+10;
       
       //Enemyへのダメージ
       enemyHP = enemyHP - bravedamage;
