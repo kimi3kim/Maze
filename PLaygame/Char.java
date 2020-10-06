@@ -12,12 +12,16 @@ import java.util.Random;
 
   // final static int  maxHP;
   static JLabel[] brave;
-  static int braveatack;
+  private static int braveatack;
+ 
   static int atack;
   static JLabel[] enemy;
   JLabel bravemove ;
   private static int damage;
   private static int bravedamage;
+  static Random rnd1;
+  private static int defaultbraveatack ;
+
 
 
 // 勇者
@@ -27,6 +31,7 @@ import java.util.Random;
     mP = 200;
     // maxHP = HP;
     braveatack = 50;
+    defaultbraveatack = 50;
 
   }
 
@@ -45,8 +50,6 @@ import java.util.Random;
   public static String getEnemyName(){
     return enemyName;
   }
-
-  
 
   public static int getHP(){
     return HP;
@@ -68,21 +71,29 @@ import java.util.Random;
     enemyHP = n;
   }
 
+  public static int getDefaultbraveatack(){
+    return defaultbraveatack ;
+  }
+
+  public static void setBraveatack(int m){
+    braveatack = m ;
+  }
+
+
   public static int getDamage(){
-     Random rnd2 = new Random();
-     damage = atack + rnd2.nextInt(10);
+     rnd1 = new Random();
+     damage = atack + rnd1.nextInt(10);
 
      //Playerへのダメージ
      HP = HP - damage;
      if(HP < 0){
        HP = 0;
-
      }
-
      return damage;
   }
+
   public static int getBraveDamage(){
-     Random rnd1 = new Random();
+     rnd1 = new Random();
      bravedamage = braveatack + rnd1.nextInt(10);
 
      //Enemyへのダメージ
@@ -92,25 +103,54 @@ import java.util.Random;
   }
 
   public static int getBraveMagicDamage(String a){
-    Random rnd2 = new Random();
+    rnd1 = new Random();
     if(a.equals("BREATHCARE")){
       if (mP - 30 >= 0){
-      bravedamage = 70 + rnd2.nextInt(30);
+      bravedamage = 70 + rnd1.nextInt(30);
       
       //Enemyへのダメージ
       enemyHP = enemyHP - bravedamage;
       mP = mP - 30;
       }
+    } else if (a.equals("DRINKMILKUP")){
+      if (mP - 40 >= 0){
+        rnd1 = new Random();
+        int heal = 40 + rnd1.nextInt(15);
+         
+        //Playerの回復
+        HP = HP + heal;
+        if(HP>200){
+          HP = 200;
+        }
+        mP = mP - 40;
+        braveatack = braveatack + rnd1.nextInt(65)+25;
+
+      } else{
+
+      }
+    } else if (a.equals("DRINKMILKDOWN")){
+      if (mP - 40 >= 0){
+        rnd1 = new Random();
+        
+        bravedamage = 30 + rnd1.nextInt(20);
+        HP = HP - bravedamage;
+
+        if(HP < 0){
+          HP = 0;
+        }
+        mP = mP - 40;
+      }
+
+    }else{
     }
+    
     return bravedamage;
- }
-
-
+  }
 
   public static void getHeal(){
     if (mP - 20 >= 0){
-      Random rnd2 = new Random();
-      int healpoint = 20 + rnd2.nextInt(15);
+      rnd1 = new Random();
+      int healpoint = 20 + rnd1.nextInt(15);
        
       //Playerの回復
       HP = HP + healpoint;
