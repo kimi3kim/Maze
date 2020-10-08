@@ -26,7 +26,7 @@ class KeyOperation extends JFrame implements KeyListener {
   static int counter;
   int mazeSize;
   int [][] wall;
-  int x;
+  static int x;
   int y;
   int z;
   int a;
@@ -53,6 +53,7 @@ class KeyOperation extends JFrame implements KeyListener {
   static int moveCounter;
   static int magicCounter;
   static String action; 
+  static String boss;
 
   static String bmAttack;
   static String bmMagic;
@@ -77,6 +78,7 @@ class KeyOperation extends JFrame implements KeyListener {
 
     view = "maze";
     moveCounter = 0;
+    boss= "OFF";
 
 // キャラのスタート位置を指定
     this.x = x;
@@ -145,7 +147,7 @@ class KeyOperation extends JFrame implements KeyListener {
     spaceHP.setBorder(borderHP);
 
     // HP とMPを表示する Label
-    statas = new JLabel(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP()); 
+    statas = new JLabel(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP()); 
     statas.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 24));
     statas.setForeground(Color.WHITE);
     spaceHP.add(statas);
@@ -222,12 +224,8 @@ class KeyOperation extends JFrame implements KeyListener {
 
             // encountEnemy();
 
-             // GAME クリア画面
-             Music.clip.stop();
-             final View clear = new View();
-             changeView(clear.gameClear);
-             View.endMusic(1);
-             view = "gameclear";
+            // ゴールでBOSS戦
+            bossBattle();
 
           }
         }
@@ -248,8 +246,7 @@ class KeyOperation extends JFrame implements KeyListener {
             magicMeniu[magicLength].setText("▷");
           }
         }
-
-
+        
         break;
 
         //下キー
@@ -337,10 +334,10 @@ class KeyOperation extends JFrame implements KeyListener {
 
         // マップで回復
         if(view.equals("statas")) {
-          if(Char.getHP() < 200){
+          if(Char.getHP() < Char.getmaxHP()){
             Char.getHeal();
-            statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
-            Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/200"+"  MP "+Char.getMP());
+            statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
+            Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
           }
 
           // バトル画面の時
@@ -360,7 +357,7 @@ class KeyOperation extends JFrame implements KeyListener {
                 } else if(counter == 2){
                   Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
                   battleMusic(counter);
-                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP() + " MP "+Char.getMP());
                   counter++;
                 }else if (counter == 3 ){
                   Battleview.report.setText("次の行動を選択してください.");
@@ -391,7 +388,7 @@ class KeyOperation extends JFrame implements KeyListener {
                         magicCounter ++;  
                     }else if(magicCounter == 3){
                       Battleview.report.setText(Char.getEnemyName()+" に, "+Char.getBraveMagicDamage("BREATHCARE") +"ダメージあたえた。");
-                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                       magicCounter ++;  
                     }else if(magicCounter==4){
                       Battleview.report.setText(Char.getEnemyName() + "の攻撃!");
@@ -400,7 +397,7 @@ class KeyOperation extends JFrame implements KeyListener {
                       Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
                       battleMusic(counter);
                     
-                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                       magicCounter ++;  
                     } else{
                       Battleview.report.setText("次の行動を選択してください.");
@@ -429,14 +426,14 @@ class KeyOperation extends JFrame implements KeyListener {
                     }else if (magicCounter == 4) {
                       // 偶数の時は当たり
                       dais = new Random();
-                      if(dais.nextInt(4)%2 == 0){
+                      if(dais.nextInt(4) == 0 ||dais.nextInt(4) == 1|| dais.nextInt(4) == 3){
                         Battleview.report.setText("全身に力が漲ってきた！");
                         Char.getBraveMagicDamage("DRINKMILKUP");
-                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                         magicCounter ++; 
                       }else{
                         Battleview.report.setText("飲みすぎて腹をくだした！"+ Char.getBraveMagicDamage("DRINKMILKDOWN") +"ダメージを受けた。");
-                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                        Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                         magicCounter ++; 
                       }
                       
@@ -447,7 +444,7 @@ class KeyOperation extends JFrame implements KeyListener {
                     } else if(magicCounter==6) {
                       Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");
                       
-                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                      Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                       magicCounter ++;  
                     } else {
                       Battleview.report.setText("次の行動を選択してください.");
@@ -480,7 +477,7 @@ class KeyOperation extends JFrame implements KeyListener {
                     counterforrun++;
                 }else if(counterforrun==2){
                   Battleview.report.setText("勇者は,"+ Char.getDamage() +"ダメージを受けた。");        
-                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+Char.getMP());
+                  Battleview.char1.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+Char.getMP());
                   counterforrun++;
                 }else {
                     Battleview.report.setText("次の行動を選択してください.");
@@ -507,10 +504,14 @@ class KeyOperation extends JFrame implements KeyListener {
         case KeyEvent.VK_SPACE:
         System.out.println("スペースが押されました");
 
-        if(view.equals("battle") && battleMeniu[1].getText().equals("▷")){
-          Battleview.chooseMagic.setVisible(false);
-          magicCounter = 0;
-          comand = battleComand[0];
+        if(view.equals("battle")) {
+
+          if(battleMeniu[1].getText().equals("▷")){
+            Battleview.chooseMagic.setVisible(false);
+            magicCounter = 0;
+            comand = battleComand[0];
+          }
+        
 
         }else{
           if(spaceCounter==0){
@@ -604,12 +605,27 @@ class KeyOperation extends JFrame implements KeyListener {
 
         changeView(Battleview.battle);
 
-        final int x =1;
+        int x =1;
         final Music main2 = new Music(x);
 
       }
 
     }
+
+    public void bossBattle(){
+      Music.clip.stop();
+      view = "battle";
+      comand = battleComand[0];
+      boss = "ON";
+
+      Monster test2 = new Monster("King",300,50);
+      Battleview.report.setText(Char.getEnemyName() +"が飛び出してきた！");
+      changeView(Battleview.battle);
+
+      int x =1;
+      final Music main2 = new Music(x);
+    }
+
 
     public void viewMaze(){
       if(count2==0){
@@ -650,20 +666,32 @@ class KeyOperation extends JFrame implements KeyListener {
     }
 
     public void endBattle(){
-      view = "maze";
-      Music.clip.stop();
-      magicCounter=0;
-      counter= 0;
-      counterforrun=0;
-      Char.setenemyHP(Char.getenemymaxHP());
-      Char.setBraveatack(Char.getDefaultbraveatack());
-      
-      // 迷路画面に戻す
-      viewMaze();
-      changefromBattleview(jp,jp1,space,spaceHP);
-      moveCounter = 0;
-
-      final Music main = new Music();
+      if(boss.equals("ON")){
+        // GAME クリア画面
+        Music.clip.stop();
+        final View clear = new View();
+        changeView(clear.gameClear);
+        View.endMusic(1);
+        view = "gameclear";
+        
+        
+      }else{
+        view = "maze";
+        Music.clip.stop();
+        magicCounter=0;
+        counter= 0;
+        counterforrun=0;
+        Char.setenemyHP(Char.getenemymaxHP());
+        Char.setBraveatack(Char.getDefaultbraveatack());
+        
+        // 迷路画面に戻す
+        viewMaze();
+        changefromBattleview(jp,jp1,space,spaceHP);
+        moveCounter = 0;
+  
+        final Music main = new Music();
+        
+      }
     }
 
 
@@ -685,7 +713,7 @@ class KeyOperation extends JFrame implements KeyListener {
       add(spaceHP);
       add(space);
 
-      statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/200"+"  MP "+ Char.getMP());
+      statas.setText(Char.getName() + "  "+"LV23" + "  " + "HP "+  Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+ Char.getMP());
       Battleview.report.setText(Char.getEnemyName() +"が飛び出してきた！");
       add(panel1);//パネルの追加
       add(panel);

@@ -56,7 +56,7 @@ import javax.swing.border.LineBorder;
       // ラベルに文字を表示する。
       Char test = new Char ("勇者　PLAYER1");
 
-      char1 = new JLabel(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/200"+"  MP "+ Char.getMP());
+      char1 = new JLabel(Char.getName() + "  "+"LV23" + "  " + "HP " + Char.getHP()+"/"+ Char.getmaxHP()+"  MP "+ Char.getMP());
       char1.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 24));
       char1.setForeground(Color.WHITE);
 
@@ -82,8 +82,11 @@ import javax.swing.border.LineBorder;
       forreport.setBackground(Color.BLACK);
       forreport.setBorder(border);
 
-      Char test2 = new Char("ニンニクスライム",100,15);
-      report = new JLabel( Char.getEnemyName() +"が飛び出してきた！");
+      
+      Monster test2 = new Monster("ニンニクスライム",100,15);
+
+      report = new JLabel(/* Char.getEnemyName() +"が飛び出してきた！"*/);
+      report.setText(Char.getEnemyName() +"が飛び出してきた！");
       report.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 24));
       report.setForeground(Color.WHITE);
       report.setBounds(0, 800, 800, 100);

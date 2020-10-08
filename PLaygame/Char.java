@@ -4,9 +4,15 @@ import java.util.Random;
   private static String  name;
   private static String  enemyName;
   private static int HP;
+  private static int maxHP;
   private static int mP;
   private static int enemyHP;
   private static int enemymaxHP;
+
+  private String enemyname;
+  private int enemyHp;
+  private int enemyAttack;
+  private int enemyMaxHp;
 
   // final static int  maxHP;
   
@@ -23,11 +29,11 @@ import java.util.Random;
 // 勇者
   Char(String a){
     name = a;
-    HP = 200;
-    mP = 200;
-    // maxHP = HP;
-    braveatack = 50;
-    defaultbraveatack = 50;
+    HP = 350;
+    mP = 250;
+    maxHP = HP;
+    braveatack = 60;//50ぐらいが良い
+    defaultbraveatack = 60;
 
   }
 
@@ -37,7 +43,28 @@ import java.util.Random;
     enemyHP = a;
     enemymaxHP = a;
     atack = c;
+
+    // 継承クラスのため
+    enemyname = name;
+    enemyHp = a;
+    enemyMaxHp= a;
+    enemyAttack = c;
+
   }
+  public String getEnemyname(){
+    return enemyname;
+  }
+
+  public int getEnemyHp(){
+    return enemyHp;
+  }
+  public int getEnemymaxHp(){
+    return enemyMaxHp;
+  }
+  public int getEnemyAttack(){
+    return enemyAttack;
+  }
+
   
   public static String getName(){
     return name;
@@ -49,6 +76,9 @@ import java.util.Random;
 
   public static int getHP(){
     return HP;
+  }
+  public static int getmaxHP(){
+    return maxHP;
   }
 
   public static int getMP(){
@@ -115,8 +145,8 @@ import java.util.Random;
          
         //Playerの回復
         HP = HP + heal;
-        if(HP>200){
-          HP = 200;
+        if(HP>maxHP){
+          HP = maxHP;
         }
         mP = mP - 40;
         braveatack = braveatack + rnd1.nextInt(65)+25;
@@ -150,8 +180,8 @@ import java.util.Random;
        
       //Playerの回復
       HP = HP + healpoint;
-      if(HP>200){
-        HP = 200;
+      if(HP>maxHP){
+        HP = maxHP;
       }
       mP = mP - 20;
       
